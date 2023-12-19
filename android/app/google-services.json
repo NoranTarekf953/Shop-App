@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "327968670182",
+    "project_id": "udemyflutter-ab256",
+    "storage_bucket": "udemyflutter-ab256.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327968670182:android:ce2fd5b6451d1df018d627",
+        "android_client_info": {
+          "package_name": "com.example.udemy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl-4ihKsICVd7qmnia05CnR6RUJsuwKk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
