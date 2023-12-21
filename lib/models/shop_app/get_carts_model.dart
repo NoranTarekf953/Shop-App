@@ -1,4 +1,6 @@
 
+// ignore_for_file: non_constant_identifier_names
+
 class GetCartsModel {
   bool? status;
   Data? data;
@@ -21,8 +23,9 @@ class Data {
       json['cart_items'].forEach((v) {
         cart_items.add(CartItem.fromJson(v));
       });
-    } else
+    } else {
       cart_items = [];
+    }
   }
 }
 

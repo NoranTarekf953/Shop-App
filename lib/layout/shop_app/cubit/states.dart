@@ -7,6 +7,9 @@ abstract class ShopStates {}
 class ShopInitialStates extends ShopStates{}
 class ShopChangeNavBarStates extends ShopStates{}
 
+class ShopAddQuantityStates extends ShopStates{}
+class ShopMinusQuantityStates extends ShopStates{}
+
 class ShopHomeLoadingStates extends ShopStates{}
 class ShopHomeSuccessStates extends ShopStates{}
 class ShopHomeErrorStates extends ShopStates{}
@@ -53,3 +56,10 @@ class ShopChangeCartsErrorStates extends ShopStates{}
 class ShopGetProductDetailLoadingStates extends ShopStates{}
 class ShopGetProductDetailSuccessStates extends ShopStates{}
 class ShopGetProductDetailErrorStates extends ShopStates{}
+
+
+class ShopGetCategoryDetailLoadingStates extends ShopStates{}
+class ShopGetCategoryDetailSuccessStates extends ShopStates{}
+class ShopGetCategoryDetailErrorStates extends ShopStates{}
+
+class NewsChangeMoodState extends ShopStates{}

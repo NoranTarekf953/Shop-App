@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +29,7 @@ class FavoritesScreen extends StatelessWidget {
               childAspectRatio: 1 / 1.6,
               children: List.generate(
                   ShopCubit.get(context).getFavmodel.data!.data != null
-                          ? ShopCubit.get(context).getFavmodel!.data!.data.length
+                          ? ShopCubit.get(context).getFavmodel.data!.data.length
                           : 0,
                   (index) =>
                       productItemBuilder(ShopCubit.get(context).getFavmodel.data!.data[index].product, context)),

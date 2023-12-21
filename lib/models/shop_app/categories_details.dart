@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
-class SearchModel {
+class CatDetailsModel {
   late bool status;
   Data? data;
 
-  SearchModel.fromJson(Map<String, dynamic> json) {
+  CatDetailsModel.fromJson(Map<String, dynamic> json) {
     try {
       status = json['status'];
       data = json['data'] != null ? Data.fromJson(json['data']) : null;
@@ -47,6 +47,8 @@ class Data {
 class Product {
   late int id;
   late dynamic price;
+  dynamic oldPrice;
+  dynamic discount;
   String? image;
   String? name;
   String? description;
@@ -57,6 +59,8 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     price = json['price'];
+    oldPrice = json['old_price'];
+    discount = json['discount'];
     image = json['image'];
     name = json['name'];
     description = json['description'];

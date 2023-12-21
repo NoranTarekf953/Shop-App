@@ -11,7 +11,7 @@ import 'cubit/states.dart';
 class ShopSearchScreen extends StatelessWidget {
   ShopSearchScreen({super.key});
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  var searchController = TextEditingController();
+  final searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

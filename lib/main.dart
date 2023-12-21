@@ -3,9 +3,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/cubit.dart';
-import 'package:shop_app/modules/shop_app/products/products_detail_screen.dart';
-import 'package:shop_app/states.dart';
+import 'package:shop_app/layout/shop_app/cubit/states.dart';
+import 'package:shop_app/shared/styles/colors.dart';
 import 'layout/shop_app/cubit/cubit.dart';
 import 'layout/shop_app/shop_app_screen.dart';
 import 'modules/shop_app/log_in/logIn_screen.dart';
@@ -15,6 +14,8 @@ import 'shared/bloc_observer.dart';
 import 'shared/network/local/cache_helper.dart';
 import 'shared/network/remote/dio_helper.dart';
 import 'shared/styles/themes.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+
 
 void main() async {
   try {
@@ -72,11 +73,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         
-        BlocProvider(
-          create: (context) => AppCubit()..changeMood(sharedpref: isDark),
-        ),
+        
         BlocProvider(
           create: (context) => ShopCubit()
+          ..changeMood(sharedpref: isDark)
           ..getHomeData()
           ..getCategoryData()
           ..getFavoritesData()
@@ -84,19 +84,27 @@ class MyApp extends StatelessWidget {
           ..getCartsData(),        ),
 
       ],
-      child: BlocConsumer<AppCubit, AppStates>(
+      child: BlocConsumer<ShopCubit, ShopStates>(
           builder: (context, index) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               themeMode:
                   // ThemeMode.light,
-                  AppCubit.get(context).isDark
+                  ShopCubit.get(context).isDark
                       ? ThemeMode.dark
                       : ThemeMode.light,
               darkTheme: darkTheme,
               theme: lightTheme,
               home: Directionality(
-                  textDirection: TextDirection.ltr, child: startWidget),
+                  textDirection: TextDirection.ltr, child: AnimatedSplashScreen(
+                    splash: const Icon(Icons.shopping_cart_outlined,
+                    color: Colors.white,
+                    size: 50,),
+                     nextScreen: startWidget,
+                     duration: 3000,
+                     splashTransition: SplashTransition.fadeTransition,
+                     
+                     backgroundColor: defaultColor.shade200,)),
             );
           },
           listener: (context, index) {}),

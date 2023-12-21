@@ -21,7 +21,10 @@ class CategoriesScreen extends StatelessWidget {
             condition: ShopCubit.get(context).catmodel != null,
             builder: (context) => ListView.separated(
               physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => CategoriesBuilder( ShopCubit.get(context).catmodel!.data.data[index]),
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                    },
+                    child: categoriesBuilder( ShopCubit.get(context).catmodel!.data.data[index])),
                   separatorBuilder: (context, index) => const SizedBox(
                     height: 10,
                   ),

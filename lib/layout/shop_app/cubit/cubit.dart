@@ -1,8 +1,10 @@
 // ignore_for_file: unnecessary_null_comparison, avoid_print
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/shop_app/cubit/states.dart';
+import 'package:shop_app/models/shop_app/categories_details.dart';
 import 'package:shop_app/models/shop_app/product_detail.dart';
 
 import '../../../models/shop_app/add_remove_cart_model.dart';
@@ -12,16 +14,14 @@ import '../../../models/shop_app/get_carts_model.dart';
 import '../../../models/shop_app/get_favorites_model.dart';
 import '../../../models/shop_app/home_model.dart';
 import '../../../models/shop_app/log_in_model.dart';
-import '../../../modules/shop_app/categoris/categories_screen.dart';
+import '../../../modules/shop_app/carts/carts_screen.dart';
 import '../../../modules/shop_app/favorites/favorites_screen.dart';
-import '../../../modules/shop_app/products/products_detail_screen.dart';
 import '../../../modules/shop_app/products/products_screen.dart';
 import '../../../modules/shop_app/settings/settings_screen.dart';
 import '../../../shared/Constants/constants.dart';
-import '../../../shared/components/taskCard.dart';
 import '../../../shared/end_point.dart';
 import '../../../shared/network/remote/dio_helper.dart';
-
+import'../../../shared/network/local/cache_helper.dart';
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit() : super(ShopInitialStates());
 
@@ -30,8 +30,8 @@ class ShopCubit extends Cubit<ShopStates> {
   var currentIndex = 0;
   List<Widget> bottomScreens = [
     const ProductsScreen(),
-    const CategoriesScreen(),
     const FavoritesScreen(),
+    const CartsScreen(), 
     SettingsScreen()
   ];
   List<BottomNavigationBarItem> items = const [
@@ -40,16 +40,17 @@ class ShopCubit extends Cubit<ShopStates> {
           Icons.home,
         ),
         label: 'Home'),
-    BottomNavigationBarItem(
-        icon: Icon(
-          Icons.apps,
-        ),
-        label: 'Categories'),
-    BottomNavigationBarItem(
+        BottomNavigationBarItem(
         icon: Icon(
           Icons.favorite,
         ),
         label: 'Favorites'),
+    BottomNavigationBarItem(
+        icon: Icon(
+          Icons.shopping_bag_outlined,
+        ),
+        label: 'Carts'),
+    
     BottomNavigationBarItem(
         icon: Icon(
           Icons.settings,
@@ -69,6 +70,16 @@ class ShopCubit extends Cubit<ShopStates> {
     Map<int, bool> changeCarts = {};
 
 
+int counter =0 ;
+void addQuantity(){
+  counter ++;
+  emit(ShopAddQuantityStates());
+}
+void minusQuantity(){
+  counter<0 ? counter=0:   counter--;
+
+  emit(ShopMinusQuantityStates());
+}
 
   void getHomeData() {
     emit(ShopHomeLoadingStates());
@@ -220,7 +231,7 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
    GetProductDetailModel? getProductDetail;
-  void getProductDetails({dynamic productId,context}) {
+  void getProductDetails({dynamic productId,}) {
     emit(ShopGetProductDetailLoadingStates());
 
     DioHelper.getData(
@@ -242,7 +253,33 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
+ CatDetailsModel? getCatDetail;
 
+  void getCategoriesDetails({dynamic categoryId,}) {
+    emit(ShopGetCategoryDetailLoadingStates());
+
+    DioHelper.getData(
+      url:'products?category_id=$categoryId' ,
+       token: token)
+       .then((value) {
+        print (value.data);
+        getCatDetail = CatDetailsModel.fromJson(value.data);
+//navigateTo(context, ProductDetailScreen());
+        print(getCatDetail!.data!.data.length);
+        if (getCatDetail != null) {
+          emit(ShopGetCategoryDetailSuccessStates());
+          
+          //print(value.data);
+        }
+     
+    }).catchError((e) {
+      emit(ShopGetCategoryDetailErrorStates());
+    });
+  }
+
+
+
+//////log in///////
   late ShopLoginModel userData;
   void getUserData() {
     try {
@@ -281,4 +318,25 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopUpdateUserDataErrorStates());
     });
   }
+
+
+
+
+bool isDark = false;
+
+  void changeMood({ bool? sharedpref}) {
+    if (sharedpref != null) {
+      isDark = sharedpref;
+      emit(NewsChangeMoodState());
+    } else {
+      isDark = !isDark;
+       CacheHelper.putBoolean(key: 'isDark', value: isDark).then((value) {
+      emit(NewsChangeMoodState());
+    });
+    }
+   
+  }
+
+
 }
+
