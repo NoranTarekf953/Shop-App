@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../shared/components/taskCard.dart';
@@ -13,7 +14,10 @@ class OnBoardingModel {
   String img;
   String title;
   String body;
-  OnBoardingModel({required this.img, required this.title, required this.body});
+  OnBoardingModel({required this.img,
+   required this.title,
+    required this.body});
+ 
 }
 
 class OnBoardingScreen extends StatefulWidget {
@@ -26,17 +30,17 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   List<OnBoardingModel> list = [
     OnBoardingModel(
-        img: 'assets/images/onboarding2.jpg',
-        title: 'On boarding title 1',
-        body: 'On boarding body 1'),
+        img: 'assets/images/OnlineShop.png',
+        title: 'Make Order',
+        body: 'Choose Whatever the Product you wish for with the easiest way possible using ShopMart'),
     OnBoardingModel(
-        img: 'assets/images/onboarding2.jpg',
-        title: 'On boarding title 2',
-        body: 'On boarding body 2'),
+        img: 'assets/images/Payment.png',
+        title: 'Choose Payment',
+        body: 'Pay with the safest way possible either by cash or credit cards'),
     OnBoardingModel(
-        img: 'assets/images/onboarding2.jpg',
-        title: 'On boarding title 3',
-        body: 'On boarding body 3'),
+        img: 'assets/images/Delivery.png',
+        title: 'Fast Delivery',
+        body: 'Yor Order will be shipped to you as fast as possible by our carrier'),
   ];
   bool isLast = false;
   var controller = PageController();
@@ -91,15 +95,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   SmoothPageIndicator(
                     controller: controller,
                     count: list.length,
-                    effect: const ExpandingDotsEffect(
+                    effect:  ExpandingDotsEffect(
+                      activeDotColor: defaultColor.shade100,
                       spacing: 8,
                       dotWidth: 20,
                       dotHeight: 16,
-                      dotColor: Colors.grey,
+                      dotColor: Colors.grey.shade400,
                     ),
                   ),
                   const Spacer(),
                   FloatingActionButton(
+                    backgroundColor: defaultColor.shade100,
                       onPressed: () {
                         isLast == true
                             ? submit()
@@ -119,7 +125,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   Widget onBoardingItem(OnBoardingModel item) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         //'assets/images/onboarding2.jpg'
         Expanded(child: Image.asset(item.img)),
@@ -128,14 +134,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
         Text(
           item.title,
-          style: const TextStyle(fontSize: 24),
+          style:  GoogleFonts.notoSerif(
+            
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: defaultColor),
         ),
         const SizedBox(
           height: 20,
         ),
         Text(
           item.body,
-          style: const TextStyle(fontSize: 20),
+          style:  GoogleFonts.notoSerif(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[800]),
         ),
       ],
     );

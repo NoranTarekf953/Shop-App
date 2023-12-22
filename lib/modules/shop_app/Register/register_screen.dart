@@ -3,6 +3,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 import '../../../layout/shop_app/shop_app_screen.dart';
@@ -199,7 +200,7 @@ final emailController = TextEditingController();
                                   borderRadius: BorderRadius.circular(25),
                                   border:
                                       Border.all(color: Colors.grey.shade300),
-                                  color: Colors.black),
+                                  color: defaultColor),
                               child: MaterialButton(
                                 onPressed: () {
                                   if (formkey.currentState!.validate()) {
@@ -237,8 +238,8 @@ final emailController = TextEditingController();
                         TextButton(onPressed: (){
                           navigateTo(context, LogIn_Screen());
                         }, child: Text('SIGN IN',
-                        style: TextStyle(
-                          color: Colors.black,
+                        style: GoogleFonts.poppins(
+                          color: defaultColor,
                           fontWeight: FontWeight.w500,
                           fontSize: MediaQuery.of(context).size.width *
                                       0.045

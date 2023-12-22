@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
                     splash: const Icon(Icons.shopping_cart_outlined,
                     color: Colors.white,
                     size: 50,),
-                     nextScreen: startWidget,
+                     nextScreen: OnBoardingScreen(),
                      duration: 3000,
                      splashTransition: SplashTransition.fadeTransition,
                      

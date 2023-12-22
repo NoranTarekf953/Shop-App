@@ -166,7 +166,7 @@ class LogIn_Screen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(25),
                                   border:
                                       Border.all(color: Colors.grey.shade300),
-                                  color: Colors.black),
+                                  color: defaultColor),
                               child: MaterialButton(
                                 onPressed: () {
                                   if (formkey.currentState!.validate()) {
@@ -185,7 +185,8 @@ class LogIn_Screen extends StatelessWidget {
                               )),
                           fallback: (context) => Center(
                                 child: CircularProgressIndicator(
-                                    color: defaultColor),
+                                    color: defaultColor)
+                                    ,
                               )),
                       const SizedBox(
                         height: 20,

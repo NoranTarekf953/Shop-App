@@ -8,7 +8,7 @@ var darkTheme = ThemeData(
     primarySwatch: Colors.deepPurple,
     scaffoldBackgroundColor: HexColor('#262626'),
     appBarTheme: AppBarTheme(
-      color: Colors.white,
+      //color: Colors.white,
         actionsIconTheme:  IconThemeData(color:  HexColor('#262626')),
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.light,
