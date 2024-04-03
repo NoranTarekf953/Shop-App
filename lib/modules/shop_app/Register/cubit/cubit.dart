@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/shop_app/Register/cubit/states.dart';
 
 
-import '../../../../models/shop_app/log_in_model.dart';
+import '../../../../models/shop_app/profileModels/log_in_model.dart';
 import '../../../../shared/Constants/constants.dart';
 import '../../../../shared/end_point.dart';
 import '../../../../shared/network/remote/dio_helper.dart';

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../shared/components/shopApp_component.dart';
+import '../../../shared/styles/colors.dart';
 
 class CartsScreen extends StatelessWidget {
   const CartsScreen({super.key});
@@ -14,39 +15,163 @@ class CartsScreen extends StatelessWidget {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        return ConditionalBuilder(
-              condition: state is! ShopGetCartsLoadingStates,
-              builder: (context) =>
-                  ShopCubit.get(context).getCartsmodel.data != null
-                      ? GridView.count(
-                          padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 3,
-                          crossAxisSpacing: 3,
-                          childAspectRatio: 1 / 1.6,
-                          children: List.generate(
-                              ShopCubit.get(context).getCartsmodel.data != null
-                                  ? ShopCubit.get(context)
-                                      .getCartsmodel
-                                      .data!
-                                      .cart_items
-                                      .length
-                                  : 0,
-                              (index) => productItemBuilder(
+        return Column(
+          children: [
+            Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if(state is ShopGetCartsLoadingStates)
+                    LinearProgressIndicator(),
+                    ConditionalBuilder(
+                        condition: state is! ShopGetCartsLoadingStates,
+                        builder: (context) =>
+                            ShopCubit.get(context).getCartsmodel.data != null
+                                ? ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        ShopCubit.get(context).getCartsmodel.data !=
+                                                null
+                                            ? ShopCubit.get(context)
+                                                .getCartsmodel
+                                                .data!
+                                                .cart_items
+                                                .length
+                                            : 0,
+                                    itemBuilder: (context, index) => cartProduct(
+                                        ShopCubit.get(context)
+                                            .getCartsmodel
+                                            .data!
+                                            .cart_items[index],
+                                        context),
+                                    separatorBuilder:
+                                        (BuildContext context, int index) => const SizedBox(
+                                      height: 10,
+                                    ),
+                                  )
+                                : Container(),
+                        fallback: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                    Container(
+                      //height: 100,
+                      color: Colors.grey[200],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                           
+                            Row(
+                              children: [
+                                Text(
+                                  'Subtotal (${ShopCubit.get(context).getCartsmodel.data!.cart_items.length} item)',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.04,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const Spacer(),
+                                Text(
                                   ShopCubit.get(context)
                                       .getCartsmodel
                                       .data!
-                                      .cart_items[index]
-                                      .product,
-                                  context)),
-                        )
-                      : Container(),
-              fallback: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ));
-     
+                                      .sub_total
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.038,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[500],
+                                      ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Shipping Fee ',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.04,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  'Free',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.038,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[500],
+                                      ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.04,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  ShopCubit.get(context)
+                                      .getCartsmodel
+                                      .data!
+                                      .total
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width * 0.039,
+                                      fontWeight: FontWeight.w600,
+                                      color: defaultColor),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  
+                  ],
+                ),
+              ),
+            ),
+             Padding(
+               padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
+               child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.15),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  
+                                },
+                                child: const Text(
+                                  'Checkout',
+                                  style: TextStyle(fontSize: 18),
+                                )),
+                          ),
+             ),
+          ],
+          
+        );
       },
     );
   }

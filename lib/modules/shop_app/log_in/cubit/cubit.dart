@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/shop_app/log_in/cubit/states.dart';
 
 
-import '../../../../models/shop_app/log_in_model.dart';
+import '../../../../models/shop_app/profileModels/log_in_model.dart';
 import '../../../../shared/end_point.dart';
 import '../../../../shared/network/remote/dio_helper.dart';
 
@@ -17,7 +17,8 @@ class LoginShopCubit extends Cubit<LoginShopStates> {
     late ShopLoginModel loginModel;
 
   void loginUser(String email, String password) {
-    emit(LoginShopLoadingStates());
+    try {
+       emit(LoginShopLoadingStates());
     DioHelper.postData(
       url: login,
        data: {
@@ -33,6 +34,10 @@ class LoginShopCubit extends Cubit<LoginShopStates> {
       print('error in loginUser ${error.toString()}');
       emit(LoginShopErrorStates(loginModel: loginModel));
     });
+    } catch (e) {
+      print(e.toString());
+    }
+   
   }
 
   bool isPassword = true;

@@ -1,5 +1,5 @@
 
-import '../../../../models/shop_app/log_in_model.dart';
+import '../../../../models/shop_app/profileModels/log_in_model.dart';
 
 abstract class LoginShopStates{}
 

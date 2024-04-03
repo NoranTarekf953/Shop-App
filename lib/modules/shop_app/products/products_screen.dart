@@ -8,8 +8,8 @@ import 'package:shop_app/modules/shop_app/categoris/categories_detail_screen.dar
 
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
-import '../../../models/shop_app/categories_model.dart';
-import '../../../models/shop_app/home_model.dart';
+import '../../../models/shop_app/categoriesModels/categories_model.dart';
+import '../../../models/shop_app/homeModels/home_model.dart';
 import '../../../shared/Constants/constants.dart';
 import '../../../shared/components/shopApp_component.dart';
 import '../../../shared/components/taskCard.dart';
@@ -29,8 +29,11 @@ class ProductsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return ConditionalBuilder(
-            condition: ShopCubit.get(context).homemodel != null &&
-                ShopCubit.get(context).catmodel != null,
+            condition:
+            // ShopCubit.get(context).homemodel != null &&
+               // ShopCubit.get(context).catmodel != null &&
+                state is !ShopHomeLoadingStates && 
+                state is !ShopGetCategoryDetailLoadingStates,
             builder: (context) => productHomeBuilder(
                 ShopCubit.get(context).homemodel,
                 context,

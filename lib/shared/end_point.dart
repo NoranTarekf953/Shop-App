@@ -7,4 +7,7 @@ String updatePprofile = 'update-profile';
 String register = 'register';
 String search = 'products/search';
 String carts = 'carts';
+String address = 'addresses';
+String faqs = 'faqs';
+String contacts = 'contacts';
 //String productDetail = 'products/$ShopCubit';

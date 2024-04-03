@@ -5,8 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget CustomizedFormField(
     {TextInputType? textType,
-    required String labelText,
-    required IconData prefixIcon,
+     String? labelText,
+    String? hintText,
+     IconData? prefixIcon,
     IconData? suffixIcon,
     required String? Function(String?) validate,
     required TextEditingController controller,
@@ -17,38 +18,35 @@ Widget CustomizedFormField(
     bool secure = false,
     }
     ) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      //color: Colors.grey[300]
+  return TextFormField(
+    keyboardType: textType,
+    validator: validate,
+    controller: controller,
+    onFieldSubmitted: onSubmit,
+    obscureText: secure,
+    onTap: onTap,
+    onChanged: onChange,
+    enableInteractiveSelection: true,
+    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+    style:  GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.w400
     ),
-    child: TextFormField(
-      keyboardType: textType,
-      validator: validate,
-      controller: controller,
-      onFieldSubmitted: onSubmit,
-      obscureText: secure,
-      onTap: onTap,
-      onChanged: onChange,
-      enableInteractiveSelection: true,
-      onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-      style:  GoogleFonts.poppins(
-        fontSize: 16,
-        fontWeight: FontWeight.w400
-      ),
-      decoration: InputDecoration(
-          label: Text(labelText),
-          labelStyle: TextStyle(color: Colors.grey[400]),
-          contentPadding: const EdgeInsetsDirectional.only(start: 5, end: 5),
-          suffixIcon: Padding(
-            padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-            child: IconButton(onPressed: onTapSuffix, icon: Icon(suffixIcon)),
-          ),
-          prefix: Padding(
-            padding: const EdgeInsetsDirectional.only(end: 10),
-            child: Icon(prefixIcon),
-          )),
-    ),
+    decoration: InputDecoration(
+     
+        alignLabelWithHint: false,
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        labelStyle: TextStyle(color: Colors.grey[400]),
+        contentPadding: const EdgeInsetsDirectional.all(0),
+        suffixIcon: Padding(
+          padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+          child: IconButton(onPressed: onTapSuffix, icon: Icon(suffixIcon)),
+        ),
+        prefix: Padding(
+          padding: const EdgeInsetsDirectional.only(end: 10),
+          child: Icon(prefixIcon),
+        )),
   );
 }
 

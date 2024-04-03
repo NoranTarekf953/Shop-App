@@ -23,8 +23,8 @@ class UserData {
   late  String email;
   late  String phone;
     String? image;
-    int? points;
-    int? credit;
+    dynamic points;
+    dynamic credit;
   late  String token;
 
    

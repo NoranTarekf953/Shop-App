@@ -30,15 +30,15 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   List<OnBoardingModel> list = [
     OnBoardingModel(
-        img: 'assets/images/OnlineShop.png',
+        img: 'assets/images/order.jpg',
         title: 'Make Order',
         body: 'Choose Whatever the Product you wish for with the easiest way possible using ShopMart'),
     OnBoardingModel(
-        img: 'assets/images/Payment.png',
+        img: 'assets/images/payment.jpg',
         title: 'Choose Payment',
         body: 'Pay with the safest way possible either by cash or credit cards'),
     OnBoardingModel(
-        img: 'assets/images/Delivery.png',
+        img: 'assets/images/delivery.jpg',
         title: 'Fast Delivery',
         body: 'Yor Order will be shipped to you as fast as possible by our carrier'),
   ];

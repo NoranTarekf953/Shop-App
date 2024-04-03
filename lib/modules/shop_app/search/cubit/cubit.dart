@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/shop_app/search/cubit/states.dart';
 
 
-import '../../../../models/shop_app/search_model.dart';
+import '../../../../models/shop_app/searchModel/search_model.dart';
 import '../../../../shared/Constants/constants.dart';
 import '../../../../shared/end_point.dart';
 import '../../../../shared/network/remote/dio_helper.dart';

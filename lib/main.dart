@@ -8,6 +8,8 @@ import 'package:shop_app/shared/styles/colors.dart';
 import 'layout/shop_app/cubit/cubit.dart';
 import 'layout/shop_app/shop_app_screen.dart';
 import 'modules/shop_app/log_in/logIn_screen.dart';
+import 'modules/shop_app/setting/faqs_screen.dart';
+import 'modules/shop_app/setting/setting_screen.dart';
 import 'modules/shop_app/onBoarding_screen.dart';
 import 'shared/Constants/constants.dart';
 import 'shared/bloc_observer.dart';
@@ -15,7 +17,6 @@ import 'shared/network/local/cache_helper.dart';
 import 'shared/network/remote/dio_helper.dart';
 import 'shared/styles/themes.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-
 
 void main() async {
   try {
@@ -37,7 +38,7 @@ void main() async {
   print(token);
 
   if (onBoarding == true) {
-    if (token.isNotEmpty && token != '') {
+    if (token.isNotEmpty ) {
       widget =  const ShopAppScreen();
     } else {
         widget = LogIn_Screen();
@@ -81,7 +82,10 @@ class MyApp extends StatelessWidget {
           ..getCategoryData()
           ..getFavoritesData()
           ..getUserData()
-          ..getCartsData(),        ),
+          ..getCartsData()
+          ..getAddressData()
+          ..getFAQSData()
+          ..getContactData(),        ),
 
       ],
       child: BlocConsumer<ShopCubit, ShopStates>(
@@ -100,7 +104,7 @@ class MyApp extends StatelessWidget {
                     splash: const Icon(Icons.shopping_cart_outlined,
                     color: Colors.white,
                     size: 50,),
-                     nextScreen: OnBoardingScreen(),
+                     nextScreen: startWidget,
                      duration: 3000,
                      splashTransition: SplashTransition.fadeTransition,
                      

@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
 import 'package:shop_app/layout/shop_app/cubit/states.dart';
-import 'package:shop_app/models/shop_app/product_detail.dart';
+import 'package:shop_app/models/shop_app/homeModels/product_detail.dart';
 import 'package:shop_app/shared/styles/colors.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -70,13 +70,25 @@ class ProductDetailScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: FloatingActionButton(
                   heroTag: 'add cart',
-                  backgroundColor: defaultColor,
+                  backgroundColor: ShopCubit.get(context).changeCarts[ShopCubit.get(context)
+                              .getProductDetail
+                              ?.data!
+                              .id]== false?
+                              Colors.grey[200]: defaultColor,
                   onPressed: () {
-                    ShopCubit.get(context).changeFavorites(
-                        ShopCubit.get(context).changeCartsModel?.data!.id);
+                    ShopCubit.get(context).addRemoveCarts(
+                         ShopCubit.get(context).getProductDetail?.data!.id);
                   },
-                  child: Text(
+                  child: ShopCubit.get(context).changeCarts[ShopCubit.get(context)
+                              .getProductDetail
+                              ?.data!
+                              .id]== false?
+                  Text(
                     'Add to Cart',
+                    style: GoogleFonts.notoSerif(
+                        fontSize: 25, color: Colors.black),
+                  ):Text(
+                    'Added to Cart',
                     style: GoogleFonts.notoSerif(
                         fontSize: 25, color: Colors.white),
                   ),
@@ -165,51 +177,7 @@ class ProductDetailScreen extends StatelessWidget {
                                     decoration: TextDecoration.lineThrough),
                               ),
                             const Spacer(),
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.grey[300]),
-                              child: IconButton(
-                                  padding: const EdgeInsets.only(bottom: 0),
-                                  iconSize: 25,
-                                  color: Colors.black45,
-                                  onPressed: () {
-                                    ShopCubit.get(context).addQuantity();
-                                  },
-                                  icon: const Icon(Icons.add)),
-                            ),
-                            Text(
-                              ShopCubit.get(context).counter.toString(),
-                              style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87),
-                            ),
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.grey[300]),
-                              child: IconButton(
-                                  padding: const EdgeInsets.only(top: 12),
-                                  alignment: AlignmentDirectional.center,
-                                  iconSize: 22,
-                                  color: Colors.black45,
-                                  onPressed: () {
-                                    ShopCubit.get(context).minusQuantity();
-                                  },
-                                  icon: const Icon(Icons.maximize_rounded)),
-                            )
-                          ],
+                           ],
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02,

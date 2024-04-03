@@ -17,9 +17,9 @@ class FavoritesScreen extends StatelessWidget {
       listener: (context,state){},
       builder: (context,state){
         return ConditionalBuilder(
-        condition: state is !ShopGetFavLoadingStates &&  ShopCubit.get(context).getFavmodel.data!.data != [],
+        condition: state is !ShopGetFavLoadingStates ,
          builder: (context)=> 
-           ShopCubit.get(context).getFavmodel.data!.data != null?
+           ShopCubit.get(context).getFavmodel.data!.data != []?
           GridView.count(
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,

@@ -83,4 +83,26 @@ class DioHelper {
       rethrow;
     }
   }
+
+  static Future<Response> deleteData({
+    required String url,
+     Map<String, dynamic>? query,
+    String lang = 'en',
+    String token = '',
+  }) async {
+    try {
+      if (token != "" && token != null) {
+        dio.options.headers = {
+          'Content-Type': 'application/json',
+          'lang': lang,
+         'Authorization': token};
+      }
+
+      return await dio.delete(url, queryParameters: query);
+    } catch (e) {
+      print('error in delete Data${e.toString()}');
+      // Rethrow the error so that it can be caught by the calling function
+      rethrow;
+    }
+  }
 }

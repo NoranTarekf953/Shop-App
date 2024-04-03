@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
@@ -7,9 +9,46 @@ import '../../modules/shop_app/carts/carts_screen.dart';
 import '../../modules/shop_app/search/search_screen.dart';
 import '../../shared/components/taskCard.dart';
 import '../../shared/styles/colors.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
-class ShopAppScreen extends StatelessWidget {
+class ShopAppScreen extends StatefulWidget {
   const ShopAppScreen({super.key});
+
+  
+
+  @override
+  State<ShopAppScreen> createState() => _ShopAppScreenState();
+}
+
+class _ShopAppScreenState extends State<ShopAppScreen> {
+
+ConnectivityResult connectivityResult = ConnectivityResult.none;
+  Connectivity connectivity = Connectivity();
+  @override
+  void initState() {
+    connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() {
+        connectivityResult = result;
+      });
+      log(result.name);
+    });
+    super.initState();
+  }
+  String connectivityCheck(ConnectivityResult result) {
+    if (result == ConnectivityResult.wifi) {
+      return "You are now connected to wifi";
+    } else if (result == ConnectivityResult.mobile) {
+      return "You are now connected to mobile data";
+    } else if (result == ConnectivityResult.ethernet) {
+      return "You are now connected to ethernet";
+    } else if (result == ConnectivityResult.bluetooth) {
+      return "You are now connected to bluetooth";
+    } else if (result == ConnectivityResult.none) {
+      return "No connection available";
+    } else {
+      return "No Connection!!";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     ShopCubit.get(context).currentIndex = 0;
