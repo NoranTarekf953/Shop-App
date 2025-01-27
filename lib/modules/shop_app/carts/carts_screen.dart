@@ -23,38 +23,53 @@ class CartsScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if(state is ShopGetCartsLoadingStates)
-                    LinearProgressIndicator(),
+                    if (state is ShopGetCartsLoadingStates)
+                      const LinearProgressIndicator(),
                     ConditionalBuilder(
-                        condition: state is! ShopGetCartsLoadingStates,
-                        builder: (context) =>
-                            ShopCubit.get(context).getCartsmodel.data != null
-                                ? ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        ShopCubit.get(context).getCartsmodel.data !=
-                                                null
-                                            ? ShopCubit.get(context)
-                                                .getCartsmodel
-                                                .data!
-                                                .cart_items
-                                                .length
-                                            : 0,
-                                    itemBuilder: (context, index) => cartProduct(
-                                        ShopCubit.get(context)
+                        condition: state is! ShopGetCartsLoadingStates &&
+                            ShopCubit.get(context).getCartsmodel.data != null,
+                        builder: (context) => ShopCubit.get(context)
+                                .getCartsmodel
+                                .data!
+                                .cart_items
+                                .isNotEmpty
+                            ? ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    ShopCubit.get(context).getCartsmodel.data !=
+                                            null
+                                        ? ShopCubit.get(context)
                                             .getCartsmodel
                                             .data!
-                                            .cart_items[index],
-                                        context),
-                                    separatorBuilder:
-                                        (BuildContext context, int index) => const SizedBox(
-                                      height: 10,
-                                    ),
-                                  )
-                                : Container(),
-                        fallback: (context) => const Center(
-                              child: CircularProgressIndicator(),
+                                            .cart_items
+                                            .length
+                                        : 0,
+                                itemBuilder: (context, index) => cartProduct(
+                                    ShopCubit.get(context)
+                                        .getCartsmodel
+                                        .data
+                                        ?.cart_items[index],
+                                    context),
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        const SizedBox(
+                                  height: 10,
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  'No products in cart yet ',
+                                  style: TextStyle(
+                                      fontSize: 28, color: Colors.grey[400]),
+                                ),
+                              ),
+                        fallback: (context) => Center(
+                              child: Text(
+                                'No products in cart yet ',
+                                style: TextStyle(
+                                    fontSize: 28, color: Colors.grey[400]),
+                              ),
                             )),
                     Container(
                       //height: 100,
@@ -63,30 +78,27 @@ class CartsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                           
                             Row(
                               children: [
                                 Text(
-                                  'Subtotal (${ShopCubit.get(context).getCartsmodel.data!.cart_items.length} item)',
+                                  'Subtotal (${ShopCubit.get(context).getCartsmodel.data?.cart_items.length ?? 0} item)',
                                   style: TextStyle(
                                       fontSize:
-                                          MediaQuery.of(context).size.width * 0.04,
+                                          MediaQuery.of(context).size.width *
+                                              0.04,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 const Spacer(),
                                 Text(
-                                  ShopCubit.get(context)
-                                      .getCartsmodel
-                                      .data!
-                                      .sub_total
-                                      .toString(),
+                                  '${ShopCubit.get(context).getCartsmodel.data?.sub_total.toString() ?? '0'}',
                                   style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width * 0.038,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[500],
-                                      ),
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.038,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[500],
+                                  ),
                                 )
                               ],
                             ),
@@ -99,7 +111,8 @@ class CartsScreen extends StatelessWidget {
                                   'Shipping Fee ',
                                   style: TextStyle(
                                       fontSize:
-                                          MediaQuery.of(context).size.width * 0.04,
+                                          MediaQuery.of(context).size.width *
+                                              0.04,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -107,11 +120,12 @@ class CartsScreen extends StatelessWidget {
                                 Text(
                                   'Free',
                                   style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width * 0.038,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[500],
-                                      ),
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.038,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[500],
+                                  ),
                                 )
                               ],
                             ),
@@ -124,20 +138,18 @@ class CartsScreen extends StatelessWidget {
                                   'Total',
                                   style: TextStyle(
                                       fontSize:
-                                          MediaQuery.of(context).size.width * 0.04,
+                                          MediaQuery.of(context).size.width *
+                                              0.04,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 const Spacer(),
                                 Text(
-                                  ShopCubit.get(context)
-                                      .getCartsmodel
-                                      .data!
-                                      .total
-                                      .toString(),
+                                  '${ShopCubit.get(context).getCartsmodel.data?.total.toString() ?? '0'}',
                                   style: TextStyle(
                                       fontSize:
-                                          MediaQuery.of(context).size.width * 0.039,
+                                          MediaQuery.of(context).size.width *
+                                              0.039,
                                       fontWeight: FontWeight.w600,
                                       color: defaultColor),
                                 )
@@ -147,30 +159,25 @@ class CartsScreen extends StatelessWidget {
                         ),
                       ),
                     )
-                  
                   ],
                 ),
               ),
             ),
-             Padding(
-               padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
-               child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width * 0.15),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  
-                                },
-                                child: const Text(
-                                  'Checkout',
-                                  style: TextStyle(fontSize: 18),
-                                )),
-                          ),
-             ),
+            Padding(
+              padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.15),
+                child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Checkout',
+                      style: TextStyle(fontSize: 18),
+                    )),
+              ),
+            ),
           ],
-          
         );
       },
     );

@@ -67,22 +67,23 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopChangeNavBarStates());
   }
 
-String language = 'en';
-bool isTapped = false;
+  String language = 'en';
+  bool isTapped = false;
 
   void menuListTap() {
     isTapped = !isTapped;
     print(isTapped);
     emit(SocialTappedSuccessState());
   }
+
   HomeModel? homemodel;
-  Map<int, bool> changeFav = {};
-  Map<int, bool> changeCarts = {};
+  Map<int, bool> changeFav = {-1: false};
+  Map<int, bool> changeCarts = {-1: false};
 
   int counter = 0;
   void addQuantity({required int count, required productId}) {
     count++;
-    if(count <= 5) {
+    if (count <= 5) {
       updateCarts(cartId: productId, quantity: count);
     }
     print(count);
@@ -91,7 +92,7 @@ bool isTapped = false;
 
   void minusQuantity({required int count, required productId}) {
     count < 0 ? count = 0 : count--;
-    if(count != 0) {
+    if (count != 0) {
       updateCarts(cartId: productId, quantity: count);
     }
 
@@ -178,8 +179,6 @@ bool isTapped = false;
     DioHelper.getData(url: favorites, token: token).then((value) {
       try {
         getFavmodel = GetFavModel.fromJson(value.data);
-        print(value.data);
-        // print(getFavmodel!.data!.data!.length);
         if (getFavmodel != null) {
           emit(ShopGetFavSuccessStates());
         }
@@ -197,9 +196,7 @@ bool isTapped = false;
   void getCartsData() {
     emit(ShopGetCartsLoadingStates());
 
-    DioHelper.getData(
-      url: carts,
-      token: token).then((value) {
+    DioHelper.getData(url: carts, token: token).then((value) {
       try {
         getCartsmodel = GetCartsModel.fromJson(value.data);
         // print(value.data);
@@ -217,7 +214,9 @@ bool isTapped = false;
 
   AddRemoveCartModel? changeCartsModel;
 
-  void addRemoveCarts(dynamic productId,) {
+  void addRemoveCarts(
+    dynamic productId,
+  ) {
     try {
       changeCarts[productId] = !changeCarts[productId]!;
       emit(ShopChangeCartsStates());
@@ -225,10 +224,8 @@ bool isTapped = false;
       DioHelper.postData(
           url: carts,
           token: token,
-          data: {
-            'product_id': productId}
-            ).then((value) {
-              print(productId);
+          data: {'product_id': productId}).then((value) {
+        print(productId);
         changeCartsModel = AddRemoveCartModel.fromJson(value.data);
 
         print(changeCartsModel!.message);
@@ -252,58 +249,51 @@ bool isTapped = false;
     }
   }
 
-UpdateDeleteCartModel? updateDeleteCartModel;
-void updateCarts({required dynamic cartId,required int quantity}) {
-           DioHelper.putData(
-          url: 'carts/$cartId',
-          token: token,
-          data: {
-            'quantity':quantity
-          }
-            ).then((value) {
-               updateDeleteCartModel = UpdateDeleteCartModel.fromJson(value.data);
-    if(updateDeleteCartModel!.status==true) {
-      getCartsData();
-    } else{
-      showToast(updateDeleteCartModel!.message);
-    }
-    print(updateDeleteCartModel!.message);
-    emit(ShopUpdateCartsSuccessStates());
-      }).catchError((e) {
-        print(e.toString());
-    emit(ShopUpdateCartsErrorStates());
-      });
-    
+  UpdateDeleteCartModel? updateDeleteCartModel;
+  void updateCarts({required dynamic cartId, required int quantity}) {
+    DioHelper.putData(
+        url: 'carts/$cartId',
+        token: token,
+        data: {'quantity': quantity}).then((value) {
+      updateDeleteCartModel = UpdateDeleteCartModel.fromJson(value.data);
+      if (updateDeleteCartModel!.status == true) {
+        getCartsData();
+      } else {
+        showToast(updateDeleteCartModel!.message);
+      }
+      print(updateDeleteCartModel!.message);
+      emit(ShopUpdateCartsSuccessStates());
+    }).catchError((e) {
+      print(e.toString());
+      emit(ShopUpdateCartsErrorStates());
+    });
   }
 
+  void deleteCarts({required int cartId}) {
+    DioHelper.deleteData(
+      url: 'carts/$cartId',
+      token: token,
+    ).then((value) {
+      updateDeleteCartModel = UpdateDeleteCartModel.fromJson(value.data);
+      if (updateDeleteCartModel!.status == true) {
+        getCartsData();
+      } else {
+        showToast(updateDeleteCartModel!.message);
+      }
+      print(updateDeleteCartModel!.message);
+      emit(ShopDeleteCartsSuccessStates());
+    }).catchError((e) {
+      print('delete cart ${e.toString()}');
+      emit(ShopDeleteCartsErrorStates());
+    });
+  }
 
-void deleteCarts({required int cartId}){
-DioHelper.deleteData(
-    url: 'carts/$cartId',
-  token: token, )
-  .then((value){
-    updateDeleteCartModel = UpdateDeleteCartModel.fromJson(value.data);
-    if(updateDeleteCartModel!.status==true) {
-      getCartsData();
-    } else{
-      showToast(updateDeleteCartModel!.message);
-    }
-    print(updateDeleteCartModel!.message);
-    emit(ShopDeleteCartsSuccessStates());
-  }).catchError((e){
-    print('delete cart ${e.toString()}');
-    emit(ShopDeleteCartsErrorStates());
-  });
-
-}
 ///////////// Addresses ///////////////
- AddressModel? addressModel;
+  AddressModel? addressModel;
   void getAddressData() {
     emit(ShopGetAddressLoadingStates());
 
-    DioHelper.getData(
-      url: address,
-      token: token).then((value) {
+    DioHelper.getData(url: address, token: token).then((value) {
       try {
         addressModel = AddressModel.fromJson(value.data);
         // print(value.data);
@@ -319,97 +309,89 @@ DioHelper.deleteData(
     });
   }
 
-late NewAddressModel newAddressModel;
+  late NewAddressModel newAddressModel;
 
-void addNewAddressData({
-  required String name,
-  required String city,
-  required String region,
-  required String details,
-  required String notes,
-  double latitude = 30.0616863,
-  double longitude = 31.3260088
-}){
-emit(ShopAddNewAddressLoadingStates());
-DioHelper.postData(
-  url: address,
-  token: token,
-   data: {
-    'name':name,
-    'city':city,
-    'region':region,
-    'details':details,
-    'notes':notes,
-    'latitude':latitude,
-    'longitude':longitude
-   }).then((value) {
-    newAddressModel = NewAddressModel.fromJson(value.data);
-    if(newAddressModel.status==true) {
-      getAddressData();
-    } else{
-      showToast(newAddressModel.message);
-    }
-    emit(ShopAddNewAddressSuccessStates());
-   }).catchError((e){
-print('error in add new address ${e.toString()}');
-emit(ShopAddNewAddressErrorStates());
-   });
-}
+  void addNewAddressData(
+      {required String name,
+      required String city,
+      required String region,
+      required String details,
+      required String notes,
+      double latitude = 30.0616863,
+      double longitude = 31.3260088}) {
+    emit(ShopAddNewAddressLoadingStates());
+    DioHelper.postData(url: address, token: token, data: {
+      'name': name,
+      'city': city,
+      'region': region,
+      'details': details,
+      'notes': notes,
+      'latitude': latitude,
+      'longitude': longitude
+    }).then((value) {
+      newAddressModel = NewAddressModel.fromJson(value.data);
+      if (newAddressModel.status == true) {
+        getAddressData();
+      } else {
+        showToast(newAddressModel.message);
+      }
+      emit(ShopAddNewAddressSuccessStates());
+    }).catchError((e) {
+      print('error in add new address ${e.toString()}');
+      emit(ShopAddNewAddressErrorStates());
+    });
+  }
 
-void updateAddressData({
-  required int id ,
-  required String name,
-  required String city,
-  required String region,
-  required String details,
-  required String notes,
-  double latitude = 30.0616863,
-  double longitude = 31.3260088
-}){
-emit(ShopUpdateAddressLoadingStates());
-DioHelper.putData(
-  url: 'addresses/$id',
-  token: token,
-   data: {
-    'name':name,
-    'city':city,
-    'region':region,
-    'details':details,
-    'notes':notes,
-    'latitude':latitude,
-    'longitude':longitude
-   }).then((value) {
-    newAddressModel = NewAddressModel.fromJson(value.data);
-    if(newAddressModel.status==true) {
-      getAddressData();
-    } else{
-      showToast(newAddressModel.message);
-    }
-    emit(ShopUpdateAddressSuccessStates());
-   }).catchError((e){
-print('error in update address ${e.toString()}');
-emit(ShopUpdateAddressErrorStates());
-   });
-}
+  void updateAddressData(
+      {required int id,
+      required String name,
+      required String city,
+      required String region,
+      required String details,
+      required String notes,
+      double latitude = 30.0616863,
+      double longitude = 31.3260088}) {
+    emit(ShopUpdateAddressLoadingStates());
+    DioHelper.putData(url: 'addresses/$id', token: token, data: {
+      'name': name,
+      'city': city,
+      'region': region,
+      'details': details,
+      'notes': notes,
+      'latitude': latitude,
+      'longitude': longitude
+    }).then((value) {
+      newAddressModel = NewAddressModel.fromJson(value.data);
+      if (newAddressModel.status == true) {
+        getAddressData();
+      } else {
+        showToast(newAddressModel.message);
+      }
+      emit(ShopUpdateAddressSuccessStates());
+    }).catchError((e) {
+      print('error in update address ${e.toString()}');
+      emit(ShopUpdateAddressErrorStates());
+    });
+  }
 
-void deleteAddressData({required addressId}){
-  DioHelper.deleteData(
-    url: 'addresses/$addressId',
-  token: token, )
-  .then((value){
-    newAddressModel = NewAddressModel.fromJson(value.data);
-    if(newAddressModel.status==true) {
-      getAddressData();
-    } else{
-      showToast(newAddressModel.message);
-    }
-    emit(ShopDeleteAddressSuccessStates());
-  }).catchError((e){
-    print('delete address ${e.toString()}');
-    emit(ShopDeleteAddressErrorStates());
-  });
-}
-  
+  void deleteAddressData({required addressId}) {
+    DioHelper.deleteData(
+      url: 'addresses/$addressId',
+      token: token,
+    ).then((value) {
+      newAddressModel = NewAddressModel.fromJson(value.data);
+      if (newAddressModel.status == true) {
+        getAddressData();
+      } else {
+        showToast(newAddressModel.message);
+      }
+      emit(ShopDeleteAddressSuccessStates());
+    }).catchError((e) {
+      print('delete address ${e.toString()}');
+      emit(ShopDeleteAddressErrorStates());
+    });
+  }
+
   ///////////// product detail ///////////////
   GetProductDetailModel? getProductDetail;
   void getProductDetails({
@@ -457,31 +439,27 @@ void deleteAddressData({required addressId}){
 
 //// settings //////////
 
-FAQsModel? faqsModel;
+  FAQsModel? faqsModel;
 
-void getFAQSData(){
-  DioHelper.getData(
-    url: faqs,
-    token: token).then((value){
+  void getFAQSData() {
+    DioHelper.getData(url: faqs, token: token).then((value) {
       faqsModel = FAQsModel.fromJson(value.data);
       emit(ShopGetFAQSSuccessStates());
-    }).catchError((e){
+    }).catchError((e) {
       print(e.toString());
     });
-} 
+  }
 
-ContactModel? contactModel;
+  ContactModel? contactModel;
 
-void getContactData(){
-  DioHelper.getData(
-    url: contacts,
-    token: token).then((value){
+  void getContactData() {
+    DioHelper.getData(url: contacts, token: token).then((value) {
       contactModel = ContactModel.fromJson(value.data);
       emit(ShopGetFAQSSuccessStates());
-    }).catchError((e){
+    }).catchError((e) {
       print(e.toString());
     });
-} 
+  }
 
 /////// User  ////////////
   late ShopLoginModel userData;

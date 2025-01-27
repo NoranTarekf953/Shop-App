@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/shop_app/search/cubit/cubit.dart';
 
-
 import '../../../shared/components/buildArticle.dart';
 import '../../../shared/components/customized_form.dart';
 import '../../../shared/components/shopApp_component.dart';
@@ -36,10 +35,14 @@ class ShopSearchScreen extends StatelessWidget {
                           return null;
                         },
                         controller: searchController,
+                        onChange: (text) {
+                          SearchCubit.get(context).searchFun(text);
+                        },
                         onSubmit: (text) {
                           SearchCubit.get(context).searchFun(text);
                         }),
-                    if (state is SearchLoadingState) const LinearProgressIndicator(),
+                    if (state is SearchLoadingState)
+                      const LinearProgressIndicator(),
                     if (state is SearchSuccesslState)
                       Expanded(
                         child: ListView.separated(
@@ -52,7 +55,7 @@ class ShopSearchScreen extends StatelessWidget {
                                             .searchModel!
                                             .data!
                                             .data[index],
-                                            isSearch: true)
+                                        isSearch: true)
                                     : const Text('Loading...'),
                             separatorBuilder: (context, index) => myDivider(),
                             itemCount:

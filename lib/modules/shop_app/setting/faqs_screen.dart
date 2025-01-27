@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
@@ -33,11 +32,14 @@ class FAQsScreen extends StatelessWidget {
             ),
           ),
           body: Padding(
-            padding: EdgeInsets.all(15),
-            child:ListView.separated(
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index)=> FAQsItemBuilder(model:cubit.faqsModel!.data!.faqsItem[index]),
-               separatorBuilder: (context,index)=> SizedBox(height: 10,),
+            padding: const EdgeInsets.all(15),
+            child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => FAQsItemBuilder(
+                    model: cubit.faqsModel!.data!.faqsItem[index]),
+                separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
                 itemCount: cubit.faqsModel!.data!.faqsItem.length),
           ),
         );
@@ -48,10 +50,7 @@ class FAQsScreen extends StatelessWidget {
 
 class FAQsItemBuilder extends StatefulWidget {
   FAQsItem model;
-   FAQsItemBuilder({
-    super.key,
-    required this.model
-  });
+  FAQsItemBuilder({super.key, required this.model});
 
   @override
   // ignore: no_logic_in_create_state
@@ -61,19 +60,18 @@ class FAQsItemBuilder extends StatefulWidget {
 class _FAQsItemBuilderState extends State<FAQsItemBuilder> {
   bool isTapped = true;
   FAQsItem model;
-  
+
   _FAQsItemBuilderState({required this.model});
 
   @override
   Widget build(BuildContext context) {
- var cubit = ShopCubit.get(context);
+    var cubit = ShopCubit.get(context);
 
     return Container(
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
@@ -85,7 +83,7 @@ class _FAQsItemBuilderState extends State<FAQsItemBuilder> {
               data: ExpansionTileThemeData(
                   shape: Border.all(color: Colors.transparent)),
               child: ExpansionTile(
-                childrenPadding: EdgeInsets.all(0),
+                childrenPadding: const EdgeInsets.all(0),
                 tilePadding: const EdgeInsets.all(0),
                 onExpansionChanged: (value) {
                   setState(() {
@@ -103,7 +101,7 @@ class _FAQsItemBuilderState extends State<FAQsItemBuilder> {
                         color: defaultColor,
                       ),
                 title: Text(
-                  model.question??'',
+                  model.question ?? '',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -111,7 +109,7 @@ class _FAQsItemBuilderState extends State<FAQsItemBuilder> {
                 ),
                 children: [
                   Text(
-                    model.answer??'',
+                    model.answer ?? '',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Colors.grey[800],
                         fontWeight: FontWeight.w400,

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/shop_app/log_in/cubit/states.dart';
 
-
 import '../../../layout/shop_app/shop_app_screen.dart';
 import '../../../shared/Constants/constants.dart';
 import '../../../shared/components/customized_form.dart';
@@ -50,7 +49,8 @@ class LogIn_Screen extends StatelessWidget {
                       key: 'token', value: state.loginModel.data!.token)
                   .then((value) {
                 token = state.loginModel.data!.token;
-                navigateAndFinish(context,  const ShopAppScreen());
+                navigateAndFinish(
+                    context: context, widget: const ShopAppScreen());
               });
             } else {
               print(state.loginModel.message);
@@ -59,20 +59,24 @@ class LogIn_Screen extends StatelessWidget {
                   context: context,
                   state: ToastState.error);
             }
+          } else if (state is LoginShopErrorStates) {
+            print(state.loginModel.message);
+            flutterToast(
+                msg: state.loginModel.message!,
+                context: context,
+                state: ToastState.error);
           }
-          else if(state is LoginShopErrorStates){
-              print(state.loginModel.message);
-              flutterToast(
-                  msg: state.loginModel.message!,
-                  context: context,
-                  state: ToastState.error);
-            }
         },
         builder: (context, state) => Scaffold(
-          appBar: AppBar(leading: Container(),),
+          appBar: AppBar(
+            leading: Container(),
+            toolbarHeight: 0,
+          ),
           body: SingleChildScrollView(
             child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.06),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.06,
+                  vertical: 30),
               child: Center(
                 child: Form(
                   key: formkey,
@@ -110,6 +114,9 @@ class LogIn_Screen extends StatelessWidget {
                           validate: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Email must not be empty';
+                            }
+                            if (!value.endsWith('@gmail.com')) {
+                              return 'Email must end with @gmail.com';
                             }
                             return null;
                           },
@@ -158,7 +165,7 @@ class LogIn_Screen extends StatelessWidget {
                         height: 20,
                       ),
                       ConditionalBuilder(
-                          condition: state is !LoginShopLoadingStates,
+                          condition: state is! LoginShopLoadingStates,
                           builder: (context) => Container(
                               padding: const EdgeInsetsDirectional.all(10),
                               width: double.infinity,
@@ -185,8 +192,7 @@ class LogIn_Screen extends StatelessWidget {
                               )),
                           fallback: (context) => Center(
                                 child: CircularProgressIndicator(
-                                    color: defaultColor)
-                                    ,
+                                    color: defaultColor),
                               )),
                       const SizedBox(
                         height: 20,
@@ -213,7 +219,6 @@ class LogIn_Screen extends StatelessWidget {
                                   .copyWith(color: Colors.black),
                             ),
                           )),
-                
                     ],
                   ),
                 ),

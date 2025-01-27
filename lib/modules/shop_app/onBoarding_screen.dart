@@ -9,15 +9,11 @@ import '../../shared/network/local/cache_helper.dart';
 import '../../shared/styles/colors.dart';
 import 'log_in/logIn_screen.dart';
 
-
 class OnBoardingModel {
   String img;
   String title;
   String body;
-  OnBoardingModel({required this.img,
-   required this.title,
-    required this.body});
- 
+  OnBoardingModel({required this.img, required this.title, required this.body});
 }
 
 class OnBoardingScreen extends StatefulWidget {
@@ -32,32 +28,35 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     OnBoardingModel(
         img: 'assets/images/order.jpg',
         title: 'Make Order',
-        body: 'Choose Whatever the Product you wish for with the easiest way possible using ShopMart'),
+        body:
+            'Choose Whatever the Product you wish for with the easiest way possible using ShopMart'),
     OnBoardingModel(
         img: 'assets/images/payment.jpg',
         title: 'Choose Payment',
-        body: 'Pay with the safest way possible either by cash or credit cards'),
+        body:
+            'Pay with the safest way possible either by cash or credit cards'),
     OnBoardingModel(
         img: 'assets/images/delivery.jpg',
         title: 'Fast Delivery',
-        body: 'Yor Order will be shipped to you as fast as possible by our carrier'),
+        body:
+            'Yor Order will be shipped to you as fast as possible by our carrier'),
   ];
   bool isLast = false;
   var controller = PageController();
 
-  void submit(){
+  void submit() {
     CacheHelper.saveData(key: 'onBoarding', value: true).then((value) {
-      if(value)navigateAndFinish(context,  LogIn_Screen());
-
+      if (value) navigateAndFinish(context: context, widget: LogIn_Screen());
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           actions: [
             TextButton(
-                onPressed: () =>submit(),
+                onPressed: () => submit(),
                 child: Text(
                   'Skip',
                   style: TextStyle(color: defaultColor, fontSize: 18),
@@ -95,7 +94,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   SmoothPageIndicator(
                     controller: controller,
                     count: list.length,
-                    effect:  ExpandingDotsEffect(
+                    effect: ExpandingDotsEffect(
                       activeDotColor: defaultColor.shade100,
                       spacing: 8,
                       dotWidth: 20,
@@ -105,7 +104,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   const Spacer(),
                   FloatingActionButton(
-                    backgroundColor: defaultColor.shade100,
+                      backgroundColor: defaultColor.shade100,
                       onPressed: () {
                         isLast == true
                             ? submit()
@@ -134,21 +133,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
         Text(
           item.title,
-          style:  GoogleFonts.notoSerif(
-            
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: defaultColor),
+          style: GoogleFonts.notoSerif(
+              fontSize: 24, fontWeight: FontWeight.w600, color: defaultColor),
         ),
         const SizedBox(
           height: 20,
         ),
         Text(
           item.body,
-          style:  GoogleFonts.notoSerif(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[800]),
+          style: GoogleFonts.notoSerif(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[800]),
         ),
       ],
     );

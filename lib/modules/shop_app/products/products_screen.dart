@@ -29,15 +29,14 @@ class ProductsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return ConditionalBuilder(
-            condition:
-            // ShopCubit.get(context).homemodel != null &&
-               // ShopCubit.get(context).catmodel != null &&
-                state is !ShopHomeLoadingStates && 
-                state is !ShopGetCategoryDetailLoadingStates,
+            condition: ShopCubit.get(context).homemodel != null &&
+                ShopCubit.get(context).catmodel != null &&
+                state is! ShopHomeLoadingStates &&
+                state is! ShopGetCategoryDetailLoadingStates,
             builder: (context) => productHomeBuilder(
-                ShopCubit.get(context).homemodel,
-                context,
-                ShopCubit.get(context).catmodel),
+                model: ShopCubit.get(context).homemodel,
+                context: context,
+                categoryModel: ShopCubit.get(context).catmodel),
             fallback: (context) => const Center(
                   child: CircularProgressIndicator(),
                 ));
@@ -46,7 +45,7 @@ class ProductsScreen extends StatelessWidget {
   }
 
   Widget productHomeBuilder(
-      HomeModel? model, context, CategoryModel? categoryModel) {
+      {HomeModel? model, context, CategoryModel? categoryModel}) {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -56,25 +55,33 @@ class ProductsScreen extends StatelessWidget {
             color: Colors.white,
             child: Column(
               children: [
-                CarouselSlider(
-                    items: model!.data.banners
-                        .map((e) => Image(
-                              image: NetworkImage(e.image),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ))
-                        .toList(),
-                    options: CarouselOptions(
-                        height: 250,
-                        initialPage: 0,
-                        enableInfiniteScroll: true,
-                        viewportFraction: 1.0,
-                        reverse: false,
-                        autoPlay: true,
-                        autoPlayInterval: const Duration(seconds: 3),
-                        autoPlayAnimationDuration: const Duration(seconds: 1),
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        scrollDirection: Axis.horizontal)),
+                model!.data.banners.isNotEmpty
+                    ? CarouselSlider(
+                        items: model.data.banners
+                            .map((e) => Image(
+                                  image: NetworkImage(e.image),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ))
+                            .toList(),
+                        options: CarouselOptions(
+                            height: 180,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            viewportFraction: 1.0,
+                            reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 5),
+                            autoPlayAnimationDuration:
+                                const Duration(seconds: 5),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            scrollDirection: Axis.horizontal))
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: CircularProgressIndicator(
+                          color: Colors.grey[350],
+                        ),
+                      ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -94,7 +101,12 @@ class ProductsScreen extends StatelessWidget {
                             ShopCubit.get(context).getCategoriesDetails(
                                 categoryId: categoryModel.data.data[index].id);
                             state is! ShopGetCategoryDetailLoadingStates
-                                ? navigateTo(context, CategoriesDetailScreen( categoryName: categoryModel.data.data[index].name,))
+                                ? navigateTo(
+                                    context,
+                                    CategoriesDetailScreen(
+                                      categoryName:
+                                          categoryModel.data.data[index].name,
+                                    ))
                                 : const Center(
                                     child: CircularProgressIndicator(),
                                   );
@@ -121,9 +133,11 @@ class ProductsScreen extends StatelessWidget {
                   crossAxisSpacing: MediaQuery.of(context).size.width * 0.029,
                   childAspectRatio: 1 / 1.6,
                   children: List.generate(
-                      model.data.products.length,
+                      model?.data.products == null
+                          ? 0
+                          : model!.data.products.length,
                       (index) => productItemBuilder(
-                          model.data.products[index], context)),
+                          model?.data.products[index], context)),
                 )
               ],
             ),

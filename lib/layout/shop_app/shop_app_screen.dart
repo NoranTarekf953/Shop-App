@@ -14,26 +14,25 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 class ShopAppScreen extends StatefulWidget {
   const ShopAppScreen({super.key});
 
-  
-
   @override
   State<ShopAppScreen> createState() => _ShopAppScreenState();
 }
 
 class _ShopAppScreenState extends State<ShopAppScreen> {
-
-ConnectivityResult connectivityResult = ConnectivityResult.none;
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
   Connectivity connectivity = Connectivity();
   @override
   void initState() {
-    connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    connectivity.onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
       setState(() {
-        connectivityResult = result;
+        connectivityResult = result.first;
       });
-      log(result.name);
+      log(result.first.name);
     });
     super.initState();
   }
+
   String connectivityCheck(ConnectivityResult result) {
     if (result == ConnectivityResult.wifi) {
       return "You are now connected to wifi";
@@ -49,6 +48,7 @@ ConnectivityResult connectivityResult = ConnectivityResult.none;
       return "No Connection!!";
     }
   }
+
   @override
   Widget build(BuildContext context) {
     ShopCubit.get(context).currentIndex = 0;
@@ -62,14 +62,23 @@ ConnectivityResult connectivityResult = ConnectivityResult.none;
                 backgroundColor: Colors.white,
                 title: Row(
                   children: [
-                    Icon(Icons.shopping_cart_outlined, color: defaultColor,size: 50,),
-                    const SizedBox(width: 5,),
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      color: defaultColor,
+                      size: 50,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
                     Text(
                       'Sala',
-                      style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                          color: defaultColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 50),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(
+                              color: defaultColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 50),
                     ),
                   ],
                 ),
@@ -79,19 +88,19 @@ ConnectivityResult connectivityResult = ConnectivityResult.none;
                       color: defaultColor.shade900,
                       onPressed: () => navigateTo(context, ShopSearchScreen()),
                       icon: const Icon(Icons.search)),
-                  IconButton(
+                  /* IconButton(
                       iconSize: 30,
                       color: defaultColor.shade900,
                       onPressed: () => navigateTo(context, const CartsScreen()),
-                      icon: const Icon(Icons.shopping_bag_outlined))
+                      icon: const Icon(Icons.shopping_bag_outlined)) */
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
-                backgroundColor: Colors.white,
-                unselectedItemColor: Colors.grey[500],
-                unselectedLabelStyle: TextStyle(color: Colors.grey[600],
-                fontWeight: FontWeight.w400),
-                elevation: 5,
+                  backgroundColor: Colors.white,
+                  unselectedItemColor: Colors.grey[500],
+                  unselectedLabelStyle: TextStyle(
+                      color: Colors.grey[600], fontWeight: FontWeight.w400),
+                  elevation: 5,
                   onTap: (index) {
                     cubit.changeNavIndex(index: index);
                   },

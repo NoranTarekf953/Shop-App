@@ -8,8 +8,6 @@ import 'package:shop_app/shared/styles/colors.dart';
 import 'layout/shop_app/cubit/cubit.dart';
 import 'layout/shop_app/shop_app_screen.dart';
 import 'modules/shop_app/log_in/logIn_screen.dart';
-import 'modules/shop_app/setting/faqs_screen.dart';
-import 'modules/shop_app/setting/setting_screen.dart';
 import 'modules/shop_app/onBoarding_screen.dart';
 import 'shared/Constants/constants.dart';
 import 'shared/bloc_observer.dart';
@@ -20,42 +18,40 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() async {
   try {
-      //يتاكد ان كل حاجة في الميثود خلصت وبعدين يفتح الابليكيشن
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    //  options: DefaultFirebaseOptions.currentPlatform,
+    //يتاكد ان كل حاجة في الميثود خلصت وبعدين يفتح الابليكيشن
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+        //  options: DefaultFirebaseOptions.currentPlatform,
 
-  );
+        );
 
-  Bloc.observer = MyBlocObserver();
-  DioHelper.init();
-  await CacheHelper.init();
-  bool isDark = CacheHelper.getData(key: 'isDark')??false;
-  Widget widget;
-  bool onBoarding = CacheHelper.getData(key: 'onBoarding')??false;
-  print(onBoarding);
-   token = CacheHelper.getData(key: 'token')??'';
-  print(token);
+    Bloc.observer = MyBlocObserver();
+    DioHelper.init();
+    await CacheHelper.init();
+    bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
+    Widget widget;
+    bool onBoarding = CacheHelper.getData(key: 'onBoarding') ?? false;
+    print(onBoarding);
+    token = CacheHelper.getData(key: 'token') ?? '';
+    print(token);
 
-  if (onBoarding == true) {
-    if (token.isNotEmpty ) {
-      widget =  const ShopAppScreen();
-    } else {
+    if (onBoarding == true) {
+      if (token.isNotEmpty) {
+        widget = const ShopAppScreen();
+      } else {
         widget = LogIn_Screen();
+      }
+    } else {
+      widget = const OnBoardingScreen();
     }
-  } else {
-    widget = const OnBoardingScreen();
-  }
 
-  runApp(
-    MyApp(
-    isDark: isDark,
-    startWidget: widget,
-  ));
+    runApp(MyApp(
+      isDark: isDark,
+      startWidget: widget,
+    ));
   } catch (e) {
     print(e.toString());
   }
-
 }
 
 class MyApp extends StatelessWidget {
@@ -70,23 +66,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
-        
-        
         BlocProvider(
           create: (context) => ShopCubit()
-          ..changeMood(sharedpref: isDark)
-          ..getHomeData()
-          ..getCategoryData()
-          ..getFavoritesData()
-          ..getUserData()
-          ..getCartsData()
-          ..getAddressData()
-          ..getFAQSData()
-          ..getContactData(),        ),
-
+            ..changeMood(sharedpref: isDark)
+            ..getHomeData()
+            ..getCategoryData()
+            ..getFavoritesData()
+            ..getUserData()
+            ..getCartsData()
+            ..getAddressData()
+            ..getFAQSData()
+            ..getContactData(),
+        ),
       ],
       child: BlocConsumer<ShopCubit, ShopStates>(
           builder: (context, index) {
@@ -100,15 +93,18 @@ class MyApp extends StatelessWidget {
               darkTheme: darkTheme,
               theme: lightTheme,
               home: Directionality(
-                  textDirection: TextDirection.ltr, child: AnimatedSplashScreen(
-                    splash: const Icon(Icons.shopping_cart_outlined,
-                    color: Colors.white,
-                    size: 50,),
-                     nextScreen: startWidget,
-                     duration: 3000,
-                     splashTransition: SplashTransition.fadeTransition,
-                     
-                     backgroundColor: defaultColor.shade200,)),
+                  textDirection: TextDirection.ltr,
+                  child: AnimatedSplashScreen(
+                    splash: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    nextScreen: startWidget,
+                    duration: 3000,
+                    splashTransition: SplashTransition.fadeTransition,
+                    backgroundColor: defaultColor.shade200,
+                  )),
             );
           },
           listener: (context, index) {}),

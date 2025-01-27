@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
 import 'package:shop_app/layout/shop_app/cubit/states.dart';
@@ -18,26 +17,31 @@ class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
   _launchURL(String path) async {
-  Uri _url = Uri.parse(path);
-  if (await launchUrl(_url)) {
-    await launchUrl(_url);
-  } else {
-    throw 'Could not launch $_url';
+    Uri _url = Uri.parse(path);
+    if (await launchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw 'Could not launch $_url';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
-    return  BlocConsumer<ShopCubit, ShopStates>(
-      listener: (context, state) {      },
+    ShopCubit.get(context).getUserData();
+
+    return BlocConsumer<ShopCubit, ShopStates>(
+      listener: (context, state) {},
       builder: (context, state) {
         var cubit = ShopCubit.get(context);
         var model = ShopCubit.get(context).userData;
+        print('????????????${model.data?.name}');
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (state is ShopGetUserDataLoadingStates)
+                LinearProgressIndicator(),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -46,20 +50,18 @@ class SettingScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: InkWell(
-                    onTap: () {
-                    },
+                    onTap: () {},
                     child: Row(
                       children: [
-          
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              model.data!.name,
+                              '${model.data?.name ?? ''}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              model.data!.email,
+                              '${model.data?.email ?? ''}',
                               style: Theme.of(context).textTheme.bodySmall,
                             )
                           ],
@@ -68,13 +70,12 @@ class SettingScreen extends StatelessWidget {
                         IconButton(
                             onPressed: () {
                               showAlertDialog(
-                context: context,
-                 content: 'Are you sure to signOut ?',
-                 yesFunction:(){
-                   logOut(context);
-                  Navigator.pop(context);
-                 });
-                             
+                                  context: context,
+                                  content: 'Are you sure to signOut ?',
+                                  yesFunction: () {
+                                    logOut(context);
+                                    //Navigator.pop(context);
+                                  });
                             },
                             icon: Row(
                               children: [
@@ -90,8 +91,8 @@ class SettingScreen extends StatelessWidget {
                                   'SignOut',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodySmall!
-                                      .copyWith(color: defaultColor),
+                                      .bodySmall
+                                      ?.copyWith(color: defaultColor),
                                 )
                               ],
                             ))
@@ -121,7 +122,7 @@ class SettingScreen extends StatelessWidget {
                         icon: Icons.person,
                         label: 'Your Personal Info ',
                         onTap: () {
-                          navigateTo(context,  ProfileScreen());
+                          navigateTo(context, ProfileScreen());
                         },
                       ),
                       MenuItem(
@@ -184,20 +185,21 @@ class SettingScreen extends StatelessWidget {
                                 value: 'en',
                                 groupValue: cubit.language,
                                 onChanged: (value) {
-                                  cubit.language = value!;
+                                  cubit.language = value ?? '';
                                 }),
                             RadioListTile(
                                 title: const Text('العربية'),
                                 value: 'ar',
                                 groupValue: cubit.language,
                                 onChanged: (value) {
-                                  cubit.language = value!;
+                                  cubit.language = value ?? '';
                                 })
                           ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
+                        padding:
+                            const EdgeInsetsDirectional.symmetric(vertical: 10),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -213,8 +215,8 @@ class SettingScreen extends StatelessWidget {
                               'Dark Mode ',
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyLarge!
-                                  .copyWith(fontWeight: FontWeight.w500),
+                                  .bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.w500),
                             ),
                             const Spacer(),
                             CupertinoSwitch(
@@ -226,13 +228,11 @@ class SettingScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                     
-                      
                     ],
                   ),
                 ),
-              )
-             , Padding(
+              ),
+              Padding(
                 padding: const EdgeInsetsDirectional.symmetric(
                     vertical: 10, horizontal: 10),
                 child: Text(
@@ -250,82 +250,91 @@ class SettingScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Padding(
-                        padding:
-                            const EdgeInsetsDirectional.symmetric(vertical: 10),
-                        child: MenuItem(
-                          icon: Icons.info_outline_rounded,
-                           onTap: (){
-                            navigateTo(context, FAQsScreen());
-                           },
-                            label: 'FAQs') )
-                  ,
-                      
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              vertical: 10),
+                          child: MenuItem(
+                              icon: Icons.info_outline_rounded,
+                              onTap: () {
+                                navigateTo(context, const FAQsScreen());
+                              },
+                              label: 'FAQs')),
                       Padding(
                         padding:
                             const EdgeInsetsDirectional.symmetric(vertical: 10),
                         child: ExpansionTileTheme(
-                        data: ExpansionTileThemeData(
-                            shape: Border.all(color: Colors.transparent)),
-                        child: ExpansionTile(
-                          tilePadding: const EdgeInsets.all(0),
-                          onExpansionChanged: (value) {
-                            // cubit.isTapped = value;
-                            cubit.menuListTap();
-                          },
-                          trailing: cubit.isTapped == true
-                              ? Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: defaultColor,
-                                )
-                              : Icon(
-                                  Icons.keyboard_arrow_right_rounded,
-                                  color: defaultColor,
-                                ),
-                          leading: CircleAvatar(
-                            child: Icon(
-                              Icons.question_mark_rounded,
-                              color: Colors.grey[600],
+                          data: ExpansionTileThemeData(
+                              shape: Border.all(color: Colors.transparent)),
+                          child: ExpansionTile(
+                            tilePadding: const EdgeInsets.all(0),
+                            onExpansionChanged: (value) {
+                              // cubit.isTapped = value;
+                              cubit.menuListTap();
+                            },
+                            trailing: cubit.isTapped == true
+                                ? Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: defaultColor,
+                                  )
+                                : Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    color: defaultColor,
+                                  ),
+                            leading: CircleAvatar(
+                              child: Icon(
+                                Icons.question_mark_rounded,
+                                color: Colors.grey[600],
+                              ),
                             ),
-                          ),
-                          title: const Text('Contact Us'),
-                          children: [
-                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.6,
-                             child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: cubit.contactModel!.data!.contactItem.length,
-                              itemBuilder: (context, index) => ListTile(
-                                
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.deepPurple,
-                                  radius: 18,
-                                  child: Image(image: NetworkImage(cubit.contactModel!.data!.contactItem[index].image??'')),
-                                                       
-                                ),
-                                title: InkWell(
-                                  onTap: () => _launchURL(cubit.contactModel!.data!.contactItem[index].value!),
-                                  child: Text(
-                                    cubit.contactModel!.data!.contactItem[index].value??'',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.blue
+                            title: const Text('Contact Us'),
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: cubit
+                                      .contactModel?.data?.contactItem.length,
+                                  itemBuilder: (context, index) => ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: Colors.deepPurple,
+                                      radius: 18,
+                                      child: Image(
+                                          width: 16,
+                                          height: 16,
+                                          image: NetworkImage(cubit
+                                                  .contactModel
+                                                  ?.data
+                                                  ?.contactItem[index]
+                                                  .image ??
+                                              '')),
+                                    ),
+                                    title: InkWell(
+                                      onTap: () => _launchURL(cubit
+                                              .contactModel
+                                              ?.data
+                                              ?.contactItem[index]
+                                              .value ??
+                                          ''),
+                                      child: Text(
+                                        '${cubit.contactModel?.data?.contactItem[index].value ?? ''}',
+                                        style: const TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor: Colors.blue),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                             ),
-                           )
-                          
-                          ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),)
-                  
+                      )
                     ],
                   ),
                 ),
               ),
-              
             ],
           ),
         );
@@ -334,13 +343,11 @@ class SettingScreen extends StatelessWidget {
   }
 }
 
-
-
 class MenuItem extends StatelessWidget {
- final IconData icon;
- final String label;
+  final IconData icon;
+  final String label;
 
- final void Function()? onTap;
+  final void Function()? onTap;
   const MenuItem({
     super.key,
     required this.icon,
@@ -353,7 +360,7 @@ class MenuItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
       child: InkWell(
-        onTap:onTap,
+        onTap: onTap,
         child: Row(
           children: [
             CircleAvatar(
@@ -369,8 +376,8 @@ class MenuItem extends StatelessWidget {
               label,
               style: Theme.of(context)
                   .textTheme
-                  .bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w500),
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w500),
             ),
             const Spacer(),
             Icon(

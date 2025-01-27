@@ -48,10 +48,11 @@ class ProductDetailScreen extends StatelessWidget {
                         ShopCubit.get(context).getProductDetail?.data!.id);
                   },
                   child: ShopCubit.get(context).changeFav[ShopCubit.get(context)
-                              .getProductDetail
-                              ?.data!
-                              .id] ==
-                          false
+                                  .getProductDetail
+                                  ?.data!
+                                  .id] ==
+                              false ||
+                          state is ShopGetProductDetailLoadingStates
                       ? const Icon(
                           Icons.favorite_outline,
                           size: 30,
@@ -70,28 +71,36 @@ class ProductDetailScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: FloatingActionButton(
                   heroTag: 'add cart',
-                  backgroundColor: ShopCubit.get(context).changeCarts[ShopCubit.get(context)
-                              .getProductDetail
-                              ?.data!
-                              .id]== false?
-                              Colors.grey[200]: defaultColor,
+                  backgroundColor: ShopCubit.get(context).changeCarts[
+                                  ShopCubit.get(context)
+                                      .getProductDetail
+                                      ?.data!
+                                      .id] ==
+                              false ||
+                          state is ShopGetProductDetailLoadingStates
+                      ? Colors.grey[200]
+                      : defaultColor,
                   onPressed: () {
                     ShopCubit.get(context).addRemoveCarts(
-                         ShopCubit.get(context).getProductDetail?.data!.id);
+                        ShopCubit.get(context).getProductDetail?.data!.id);
                   },
-                  child: ShopCubit.get(context).changeCarts[ShopCubit.get(context)
-                              .getProductDetail
-                              ?.data!
-                              .id]== false?
-                  Text(
-                    'Add to Cart',
-                    style: GoogleFonts.notoSerif(
-                        fontSize: 25, color: Colors.black),
-                  ):Text(
-                    'Added to Cart',
-                    style: GoogleFonts.notoSerif(
-                        fontSize: 25, color: Colors.white),
-                  ),
+                  child: ShopCubit.get(context).changeCarts[
+                                  ShopCubit.get(context)
+                                      .getProductDetail
+                                      ?.data!
+                                      .id] ==
+                              false ||
+                          state is ShopGetProductDetailLoadingStates
+                      ? Text(
+                          'Add to Cart',
+                          style: GoogleFonts.notoSerif(
+                              fontSize: 25, color: Colors.black),
+                        )
+                      : Text(
+                          'Added to Cart',
+                          style: GoogleFonts.notoSerif(
+                              fontSize: 25, color: Colors.white),
+                        ),
                 ),
               ),
             ]),
@@ -177,7 +186,7 @@ class ProductDetailScreen extends StatelessWidget {
                                     decoration: TextDecoration.lineThrough),
                               ),
                             const Spacer(),
-                           ],
+                          ],
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02,

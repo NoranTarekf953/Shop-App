@@ -13,34 +13,47 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShopCubit,ShopStates>(
-      listener: (context,state){},
-      builder: (context,state){
+    return BlocConsumer<ShopCubit, ShopStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = ShopCubit.get(context).getFavmodel;
         return ConditionalBuilder(
-        condition: state is !ShopGetFavLoadingStates ,
-         builder: (context)=> 
-           ShopCubit.get(context).getFavmodel.data!.data != []?
-          GridView.count(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              mainAxisSpacing: 3,
-              crossAxisSpacing: 3,
-              childAspectRatio: 1 / 1.6,
-              children: List.generate(
-                  ShopCubit.get(context).getFavmodel.data!.data != null
-                          ? ShopCubit.get(context).getFavmodel.data!.data.length
-                          : 0,
-                  (index) =>
-                      productItemBuilder(ShopCubit.get(context).getFavmodel.data!.data[index].product, context)),
-            ):
-          Container(),
-                 
-           
-          fallback:(context)=>const Center(child: CircularProgressIndicator(),) );
+            condition: cubit.data != null,
+            builder: (context) => cubit.data!.data.isNotEmpty &&
+                    cubit.data != null
+                ? GridView.count(
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 3,
+                    crossAxisSpacing: 3,
+                    childAspectRatio: 1 / 1.6,
+                    children: List.generate(
+                        cubit.data!.data != null
+                            ? ShopCubit.get(context)
+                                .getFavmodel
+                                .data!
+                                .data
+                                .length
+                            : 0,
+                        (index) => productItemBuilder(
+                            cubit.data?.data[index].product, context)),
+                  )
+                : Center(
+                    child: Text(
+                      'No Favorite product yet ',
+                      style: TextStyle(fontSize: 28, color: Colors.grey[400]),
+                    ),
+                  ),
+            fallback: (context) {
+              return Center(
+                child: Text(
+                  'No Favorite product yet ',
+                  style: TextStyle(fontSize: 28, color: Colors.grey[400]),
+                ),
+              );
+            });
       },
-    ); }
-
-
-
+    );
   }
+}
